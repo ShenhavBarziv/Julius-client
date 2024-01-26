@@ -8,7 +8,7 @@ import { BrowserRouter, Routes, Route, } from 'react-router-dom';
 import Admin from './pages/admin/Admin';
 import Edit from './pages/admin/shared/edit/Edit';
 import Approve from './pages/admin/shared/approve/Approve';
-import List from './pages/list/List';
+import EmployeeList from './pages/employeeList/EmployeeList';
 import Profile from './pages/profile/Profile';
 import EditUser from './pages/admin/shared/edit/shared/editUser/EditUser';
 function App() {
@@ -22,7 +22,7 @@ function App() {
         <Route path="/admin/edit" element={<Edit />} />
         <Route path="/admin/approve" element={<Approve />} />
         <Route path="/admin/editUser" element={<EditUser />} />
-        <Route path="/employee-list" element={<List />} />
+        <Route path="/employee-list" element={<EmployeeList />} />
         <Route path="/" element={<Home />} />
         <Route path="/*" element={<NotFound />} />{/*it's a 404 page*/}
       </Routes>

@@ -14,8 +14,3 @@ export type ResponeType = {
     data: UserData[];
     admin: boolean;
 }
-export type ResponeTypeUser = {
-    status: boolean;
-    data: UserData;
-    admin: boolean;
-}

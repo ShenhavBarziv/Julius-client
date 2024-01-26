@@ -1,9 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from '../../../../components/navbar/Navbar';
-import './styles.css';
+import {
+  CircularProgress,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Button,
+} from '@mui/material';
 import approveApi from '../../../../api/admin/approveApi';
+import type { UserData } from './types';
+import * as Constants from './constant';
 import { useNavigate } from 'react-router-dom';
-import type { UserData } from './types'; // Import the UserData type
 
 function Approve() {
   const [data, setData] = useState<UserData[]>([]);
@@ -12,17 +23,20 @@ function Approve() {
   const navigate = useNavigate();
   const [admin, setAdmin] = useState(false);
 
+  const [loadingRows, setLoadingRows] = useState<string[]>([]);
+
   const fetchData = async () => {
     try {
       const result = await approveApi.fetchData();
+      console.log(result);
       if (result.success) {
         setData(result.data);
         setAdmin(true);
       } else if (result.message === 'notAdmin') {
-        alert('Access Denied: You are not an admin.');
+        alert(Constants.MESSAGES.ACCESS_DENIED_ADMIN);
         navigate('/profile');
       } else if (result.message === 'notLoggedIn') {
-        alert('Access Denied: Please log in to view this page.');
+        alert(Constants.MESSAGES.ACCESS_DENIED_LOGIN);
         navigate('/login');
       }
     } catch (error) {
@@ -40,23 +54,27 @@ function Approve() {
 
   const handleApprove = async (id: string) => {
     try {
+      setLoadingRows((prevLoadingRows) => [...prevLoadingRows, id]);
       const result = await approveApi.approveUser(id);
       if (!result.success) {
         alert(result.message);
       }
     } finally {
       fetchData();
+      //setLoadingRows((prevLoadingRows) => prevLoadingRows.filter((rowId) => rowId !== id));//this line stop the rows from loading but this is useless because the rows disappeared after an action
     }
   };
 
   const handleDelete = async (id: string) => {
     try {
+      setLoadingRows((prevLoadingRows) => [...prevLoadingRows, id]);
       const result = await approveApi.deleteUser(id);
       if (!result.success) {
         alert(result.message);
       }
     } finally {
       fetchData();
+      //setLoadingRows((prevLoadingRows) => prevLoadingRows.filter((rowId) => rowId !== id));
     }
   };
 
@@ -64,53 +82,52 @@ function Approve() {
     <>
       <Navbar admin={admin} />
       {loading ? (
-        <p className='loading'>Loading data...</p>
+        <p className='loading'>{Constants.MESSAGES.LOADING}</p>
       ) : status === 'notAdmin' ? (
-        <p className='error-message'>Access Denied: You are not an admin.</p>
+        <p className='error-message'>{Constants.MESSAGES.ACCESS_DENIED_ADMIN}</p>
       ) : status === 'notLoggedIn' ? (
-        <p className='error-message'>Access Denied: Please log in to view this page.</p>
+        <p className='error-message'>{Constants.MESSAGES.ACCESS_DENIED_LOGIN}</p>
       ) : (
-        <table className='user-table'>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Job</th>
-              <th>Email</th>
-              <th>Position</th>
-              <th>Phone Number</th>
-              <th>Hire Date</th>
-              <th>Birth Date</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map(item => (
-              <tr key={item._id}>
-                <td>{item.name}</td>
-                <td>{item.job}</td>
-                <td>{item.email}</td>
-                <td>{item.position}</td>
-                <td>{item.phoneNumber}</td>
-                <td>{item.hireDate}</td>
-                <td>{item.birthDate}</td>
-                <td>
-                  <button
-                    className='approve'
-                    onClick={() => handleApprove(item._id)}
-                  >
-                    Approve
-                  </button>
-                  <button
-                    className='delete'
-                    onClick={() => handleDelete(item._id)}
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <TableContainer component={Paper}>
+          <Table className='user-table'>
+            <TableHead>
+              <TableRow>
+                {Constants.TABLE_HEADERS.map((header) => (
+                  <TableCell key={header}>{header === 'Actions' ? <span style={{ marginLeft: '40px' }}>{header}</span> : header}</TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {data.map((item) => (
+                <TableRow key={item._id}>
+                  {Constants.USER_DATA_KEYS.map((key) => (
+                    <TableCell key={key}>{item[key as keyof UserData].toString()}</TableCell>
+                  ))}
+                  <TableCell>
+                    <Button
+                      variant='contained'
+                      color='primary'
+                      onClick={() => handleApprove(item._id)}
+                      disabled={loadingRows.includes(item._id)}
+                    >
+                      {Constants.BUTTON_NAMES.APPROVE}
+                      {loadingRows.includes(item._id) && <CircularProgress size={20} />}
+                    </Button>
+                    <Button
+                      variant='contained'
+                      color='secondary'
+                      onClick={() => handleDelete(item._id)}
+                      disabled={loadingRows.includes(item._id)}
+                    >
+                      {Constants.BUTTON_NAMES.DELETE}
+                      {loadingRows.includes(item._id) && <CircularProgress size={20} />}
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       )}
     </>
   );

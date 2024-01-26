@@ -1,15 +1,16 @@
-// components/Admin/Admin.tsx
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/navbar/Navbar';
-import './styles.css';
+import { Typography, Container, Box, Link as MuiLink, Button, CssBaseline } from '@mui/material';
 import { useCookies } from 'react-cookie';
 import adminApi from '../../api/admin/adminApi';
+import Loading from '../../components/loading/Loading';
 
-function Admin() {
+const Admin = () => {
   const [cookies, removeCookie] = useCookies(['token']);
   const navigate = useNavigate();
   const [isAdmin, setIsAdmin] = useState(false);
+  const [IsLoading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!cookies || !cookies.token) {
@@ -24,25 +25,40 @@ function Admin() {
         console.error('Error checking admin status:', error);
         alert('Error\nRedirecting to login');
         navigate('/login');
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, [cookies.token, navigate, removeCookie]);
 
   return (
-    <>
+    <Container>
+      <CssBaseline />
       <Navbar admin={isAdmin} />
       {isAdmin && (
-        <div className="admin-page">
-          <h1>Welcome to the Admin Page</h1>
-          <Link to="/admin/edit" className="admin-link">
-            Edit User
-          </Link>
-          <Link to="/admin/approve" className="admin-link">
-            Approve Users
-          </Link>
-        </div>
+        <Box className="admin-page" textAlign="center" p={4}>
+          <Typography variant="h4" gutterBottom>
+            Welcome to the Admin Page
+          </Typography>
+          <Box mt={3}>
+            <MuiLink component={Link} to="/admin/edit">
+              <Button variant="contained" color="primary" size="medium" fullWidth>
+                Edit User
+              </Button>
+            </MuiLink>
+          </Box>
+          <Box mt={3}>
+            <MuiLink component={Link} to="/admin/approve">
+              <Button variant="contained" color="secondary" size="medium" fullWidth>
+                Approve Users
+              </Button>
+            </MuiLink>
+          </Box>
+        </Box>
       )}
-    </>
+      {IsLoading && <Loading />}
+    </Container>
   );
-}
+};
 
 export default Admin;

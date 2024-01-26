@@ -1,6 +1,6 @@
 import Link from '@mui/material/Link';
 import './styles.css';
-import * as Constants from './constants';
+import * as Constants from './constant';
 import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
@@ -20,11 +20,13 @@ function Home() {
         {Constants.HEADER_BEFORE_INSTRUCTIONS}
       </Typography>
       <Grid item xs={6} sx={{ textAlign: 'left', color: '#34495e' }}>
-        <ol>
-          <li>{Constants.INSTRUCTION1} <Link href="/SignUp" sx={{ color: '#3498db' }}>{Constants.SIGNUP}</Link>.</li>
-          <li>{Constants.INSTRUCTION2}</li>
-          <li>{Constants.INSTRUCTION3}</li>
-        </ol>
+        <Typography variant="body1" style={{ fontSize: '20px' }}>
+          <ol>
+            <li>{Constants.INSTRUCTION1} <Link href="/SignUp" sx={{ color: '#3498db' }}>{Constants.SIGNUP}</Link>.</li>
+            <li>{Constants.INSTRUCTION2}</li>
+            <li>{Constants.INSTRUCTION3}</li>
+          </ol>
+        </Typography>
       </Grid>
       <Typography variant='h6' sx={{ color: '#7f8c8d', marginTop: '2rem' }}>
         {Constants.LOGINMSG} <Link href="/login" sx={{ color: '#3498db' }}>{Constants.LOGIN}</Link>
