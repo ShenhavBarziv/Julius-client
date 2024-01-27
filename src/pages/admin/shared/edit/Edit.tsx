@@ -10,7 +10,7 @@ import * as Constant from "./constant";
 const Edit = () => {
   const navigate = useNavigate();
   const [data, setData] = useState<UserData[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [cookies, removeCookie] = useCookies(['token']);
   const [admin, setAdmin] = useState(false);
 
@@ -33,14 +33,14 @@ const Edit = () => {
           alert('Access denied');
           navigate('/profile');
         }
-        setLoading(false);
+        setIsLoading(false);
       } else {
         document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
         navigate('/login');
       }
     } catch (error) {
       console.error('Error fetching data:', error);
-      setLoading(false);
+      setIsLoading(false);
     }
   }
 
@@ -62,14 +62,13 @@ const Edit = () => {
       console.error(`Error deleting user: ${error}`);
     } finally {
       fetch();
-      //setLoadingRows((prevLoadingRows) => prevLoadingRows.filter((rowId) => rowId !== id));
     }
   }
 
   return (
     <>
       <Navbar admin={admin} />
-      {loading ? (
+      {isLoading ? (
         <CircularProgress />
       ) : (
         <TableContainer component={Paper}>

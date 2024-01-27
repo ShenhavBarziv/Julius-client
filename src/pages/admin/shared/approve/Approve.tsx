@@ -18,10 +18,10 @@ import { useNavigate } from 'react-router-dom';
 
 function Approve() {
   const [data, setData] = useState<UserData[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [status, setStatus] = useState<string | null>(null);
   const navigate = useNavigate();
-  const [admin, setAdmin] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const [loadingRows, setLoadingRows] = useState<string[]>([]);
 
@@ -31,7 +31,7 @@ function Approve() {
       console.log(result);
       if (result.success) {
         setData(result.data);
-        setAdmin(true);
+        setIsAdmin(true);
       } else if (result.message === 'notAdmin') {
         alert(Constants.MESSAGES.ACCESS_DENIED_ADMIN);
         navigate('/profile');
@@ -44,7 +44,7 @@ function Approve() {
       alert('Error');
       navigate('/login');
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -61,7 +61,6 @@ function Approve() {
       }
     } finally {
       fetchData();
-      //setLoadingRows((prevLoadingRows) => prevLoadingRows.filter((rowId) => rowId !== id));//this line stop the rows from loading but this is useless because the rows disappeared after an action
     }
   };
 
@@ -80,9 +79,9 @@ function Approve() {
 
   return (
     <>
-      <Navbar admin={admin} />
-      {loading ? (
-        <p className='loading'>{Constants.MESSAGES.LOADING}</p>
+      <Navbar admin={isAdmin} />
+      {isLoading ? (
+        <p className='isLoading'>{Constants.MESSAGES.LOADING}</p>
       ) : status === 'notAdmin' ? (
         <p className='error-message'>{Constants.MESSAGES.ACCESS_DENIED_ADMIN}</p>
       ) : status === 'notLoggedIn' ? (

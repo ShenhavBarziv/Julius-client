@@ -1,10 +1,7 @@
-import axios from 'axios';
-import * as CONFIG from '../../constants/config';
-import { UserData, ResponeType } from './types';
+import { ResponeType } from './types';
+import { instance } from '../API'
 
-const instance = axios.create({ baseURL: CONFIG.BASE_URL });
-
-const listApi = {
+const employeeListApi = {
     getListData: async () => {
         const response = await instance.get<ResponeType>('/api/list', { withCredentials: true });
         if (!response.data.status) {
@@ -15,4 +12,4 @@ const listApi = {
     },
 };
 
-export default listApi;
+export default employeeListApi;

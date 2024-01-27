@@ -1,4 +1,5 @@
 export type UserData = {
+    _id: string;
     name: string;
     job: string;
     email: string;
@@ -6,6 +7,5 @@ export type UserData = {
     phoneNumber: string;
     hireDate: string;
     birthDate: string;
-    password: string;
-    admin?: boolean;
+    admin: boolean;
 };

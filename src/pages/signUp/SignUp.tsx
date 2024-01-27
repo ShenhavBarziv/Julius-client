@@ -11,7 +11,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers';
 import Copyright from '../../components/copyright/Copyright';
-import signupApi from '../../api/signupApi';
+import signupApi from '../../api/auth/signupApi';
 import { UserData } from './types';
 import { useNavigate } from 'react-router-dom';
 import Loading from '../../components/loading/Loading';

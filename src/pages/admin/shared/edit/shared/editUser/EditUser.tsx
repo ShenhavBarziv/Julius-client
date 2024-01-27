@@ -20,7 +20,7 @@ function EditUser() {
   const location = useLocation();
   const userId = location.state;
   const [userData, setUserData] = useState<UserData | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [cookies, removeCookie] = useCookies(['token']);
   const [admin, setAdmin] = useState(false);
 
@@ -48,7 +48,7 @@ function EditUser() {
       } catch (error) {
         console.error('Error fetching user profile:', error);
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     };
 
@@ -93,7 +93,7 @@ function EditUser() {
         <Typography variant="h4" gutterBottom>
           Edit User
         </Typography>
-        {loading ? (
+        {isLoading ? (
           <Loading />
         ) : (
           <Box component="form">

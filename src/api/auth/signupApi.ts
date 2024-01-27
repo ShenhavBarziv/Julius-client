@@ -1,17 +1,5 @@
-// api/signupApi.js
-import axios from 'axios';
-import * as CONFIG from '../constants/config';
-type userData = {
-    email: string,
-    password: string,
-    name: string,
-    job: string,
-    birthDate: string,
-    phoneNumber: string,
-    position: string,
-    hireDate: string
-};
-const instance = axios.create({ baseURL: CONFIG.BASE_URL });
+import { instance } from '../API'
+import type { userData } from './types'
 
 const signupApi = {
     signUpUser: async (userData: userData) => {

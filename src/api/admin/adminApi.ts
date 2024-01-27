@@ -1,7 +1,5 @@
-import axios from 'axios';
-import * as CONFIG from '../../constants/config';
+import { instance } from '../API'
 
-const instance = axios.create({ baseURL: CONFIG.BASE_URL });
 const adminApi = {
     checkAdminStatus: async () => {
         const response = await instance.get('/api/profile', { withCredentials: true });

@@ -1,6 +1,4 @@
-import axios from 'axios';
 import { UserData, ResponeType, ResponeTypeUser } from './types';
-import * as CONFIG from '../../constants/config';
 import { instance } from '../API'
 const editApi = {
   fetchData: () => instance.get<ResponeType>('/api/list', { withCredentials: true }),

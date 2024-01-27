@@ -10,7 +10,7 @@ const Admin = () => {
   const [cookies, removeCookie] = useCookies(['token']);
   const navigate = useNavigate();
   const [isAdmin, setIsAdmin] = useState(false);
-  const [IsLoading, setLoading] = useState(true);
+  const [IsLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (!cookies || !cookies.token) {
@@ -27,7 +27,7 @@ const Admin = () => {
         navigate('/login');
       })
       .finally(() => {
-        setLoading(false);
+        setIsLoading(false);
       });
   }, [cookies.token, navigate, removeCookie]);
 

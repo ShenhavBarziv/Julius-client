@@ -10,8 +10,7 @@ function Profile() {
   const navigate = useNavigate();
   const [cookies, removeCookie] = useCookies(['token']);
   const [userData, setUserData] = useState(null);
-  const [msg, setMsg] = useState('Loading user profile...');
-  const [admin, setAdmin] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     if (!cookies.token) {
@@ -21,28 +20,31 @@ function Profile() {
     profileApi.getUserProfile()
       .then(user => {
         setUserData(user);
-        setAdmin(user.admin);
+        setIsAdmin(user.admin);
       })
       .catch(error => {
         console.error('Error fetching user profile:', error);
-        setMsg('Error');
+        alert("Unauthorized");
       });
   }, [cookies.token, navigate, removeCookie]);
 
   return (
     <Container>
       <CssBaseline />
-      <Navbar admin={admin} />
+      <Navbar admin={isAdmin} />
       {userData ? (
         <Paper elevation={3} className="user-profile">
           <Typography variant="h4" component="h1" gutterBottom>
             User Profile
           </Typography>
           {Object.entries(userData).map(([key, value]) => (
-            <Typography key={key} variant="h5" component="h1" gutterBottom>
-              <strong>{key}:</strong> {String(value)}
-            </Typography>
+            key !== '_id' && (
+              <Typography key={key} variant="h5" component="h1" gutterBottom>
+                <strong>{key}:</strong> {String(value)}
+              </Typography>
+            )
           ))}
+
           <br />
         </Paper>
       ) : (

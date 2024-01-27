@@ -1,8 +1,4 @@
-// api/profileApi.js
-import axios from 'axios';
-import * as CONFIG from '../../constants/config';
-
-const instance = axios.create({ baseURL: CONFIG.BASE_URL });
+import { instance } from '../API'
 
 const profileApi = {
     getUserProfile: async () => {

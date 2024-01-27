@@ -1,11 +1,13 @@
 import Link from '@mui/material/Link';
-import './styles.css';
-import * as Constants from './constant';
-import CssBaseline from '@mui/material/CssBaseline';
-import Grid from '@mui/material/Grid';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
 import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
-import Copyright from '../../components/copyright/Copyright'
+import CssBaseline from '@mui/material/CssBaseline';
+import * as Constants from './constant';
+import Copyright from '../../components/copyright/Copyright';
+
 function Home() {
   return (
     <Container component="main" maxWidth="md" sx={{ padding: '2rem', textAlign: 'center' }}>
@@ -20,13 +22,19 @@ function Home() {
         {Constants.HEADER_BEFORE_INSTRUCTIONS}
       </Typography>
       <Grid item xs={6} sx={{ textAlign: 'left', color: '#34495e' }}>
-        <Typography variant="body1" style={{ fontSize: '20px' }}>
-          <ol>
-            <li>{Constants.INSTRUCTION1} <Link href="/SignUp" sx={{ color: '#3498db' }}>{Constants.SIGNUP}</Link>.</li>
-            <li>{Constants.INSTRUCTION2}</li>
-            <li>{Constants.INSTRUCTION3}</li>
-          </ol>
-        </Typography>
+        <List>
+          {Constants.INSTRUCTIONS.map((instruction, index) => (
+            <ListItem key={index + 1}>
+              {index === 0 ? (
+                <>
+                  {index + 1}. {instruction} &#160; <Link href="/signup">Sign Up</Link>.
+                </>
+              ) : (
+                `${index + 1}. ${instruction}`
+              )}
+            </ListItem>
+          ))}
+        </List>
       </Grid>
       <Typography variant='h6' sx={{ color: '#7f8c8d', marginTop: '2rem' }}>
         {Constants.LOGINMSG} <Link href="/login" sx={{ color: '#3498db' }}>{Constants.LOGIN}</Link>

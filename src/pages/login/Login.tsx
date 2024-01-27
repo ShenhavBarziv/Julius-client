@@ -12,42 +12,47 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Loading from "../../components/loading/Loading";
 import Copyright from "../../components/copyright/Copyright";
+import { useAuth } from '../../context/AuthContext';
+
 function Login() {
   const navigate = useNavigate();
+  const { login } = useAuth();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [email, SetEmail] = useState("");
+  const [password, SetPassword] = useState("");
+  const [message, SetMessage] = useState("");
+  const [isLoading, SetIsLoading] = useState(false);
 
   useEffect(() => {
     const cookies = new Cookies();
     const userEmail = cookies.get("email");
 
     if (userEmail) {
-      setEmail(decodeURIComponent(userEmail));
+      SetEmail(decodeURIComponent(userEmail));
     }
   }, []);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    setLoading(true);
-    setMessage("");
+    SetIsLoading(true);
+    SetMessage("");
 
     try {
       console.log(email, password);
       const res = await loginApi.loginUser(email, password);
       console.log(res)
       if (res.user) {
+        // Call the login function from the context to update the user state
+        login(res.user);
         navigate("/profile");
       } else {
-        setMessage(res.msg);
+        SetMessage(res.msg);
       }
     } catch (error) {
       console.error(error);
-      setMessage("Error");
+      SetMessage("Error");
     } finally {
-      setLoading(false);
+      SetIsLoading(false);
     }
   }
 
@@ -63,12 +68,15 @@ function Login() {
           alignItems: 'center',
         }}
       >
-        {loading ? (
+        {isLoading ? (
           <Loading />
         ) : (
-          <><Typography component="h1" variant="h4">
-            Sign in
-          </Typography><br /><Box component="form" onSubmit={handleSubmit} sx={{ mt: 1, width: { lg: 300 }, height: { lg: 300 } }}>
+          <>
+            <Typography component="h1" variant="h4">
+              Sign in
+            </Typography>
+            <br />
+            <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1, width: { lg: 300 }, height: { lg: 300 } }}>
               <TextField
                 margin="normal"
                 required
@@ -79,7 +87,7 @@ function Login() {
                 autoComplete="email"
                 autoFocus
                 value={email}
-                onChange={(e) => setEmail(e.target.value)} />
+                onChange={(e) => SetEmail(e.target.value)} />
               <TextField
                 margin="normal"
                 required
@@ -90,7 +98,7 @@ function Login() {
                 id="password"
                 autoComplete="current-password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)} />
+                onChange={(e) => SetPassword(e.target.value)} />
               <Button
                 type="submit"
                 fullWidth
@@ -107,15 +115,14 @@ function Login() {
               <br />
               <LinkMui href="/signup" variant="body2">{Constant.SIGNUP_SENTENCE}</LinkMui>
               <br />
-            </Box></>
+            </Box>
+          </>
         )}
       </Box>
       <br />
       <br />
       <Copyright />
-
     </Container>
-
   );
 }
 
