@@ -36,7 +36,7 @@ const Admin = () => {
       <CssBaseline />
       <Navbar admin={isAdmin} />
       {isAdmin && (
-        <Box className="admin-page" textAlign="center" p={4}>
+        <Box textAlign="center" p={4}>
           <Typography variant="h4" gutterBottom>
             Welcome to the Admin Page
           </Typography>

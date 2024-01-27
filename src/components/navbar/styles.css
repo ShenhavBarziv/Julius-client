@@ -6,11 +6,11 @@ nav {
   margin-bottom: 30px;
 }
 
-nav a.disconnect {
+nav a#disconnect {
   float: right;
 }
 
-nav a.disconnect:hover {
+nav a#disconnect:hover {
   background-color: #e56262;
   color: black;
 }

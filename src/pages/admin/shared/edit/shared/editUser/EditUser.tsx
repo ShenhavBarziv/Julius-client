@@ -101,7 +101,7 @@ function EditUser() {
               Object.entries(userData).map(([key, value]) => (
                 key !== '_id' &&
                 key !== 'password' && (
-                  <div key={key} className="form-group">
+                  <div key={key}>
                     <label>{key}:</label>
                     {key === 'admin' ? (
                       <FormControlLabel

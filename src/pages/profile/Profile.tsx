@@ -33,7 +33,7 @@ function Profile() {
       <CssBaseline />
       <Navbar admin={isAdmin} />
       {userData ? (
-        <Paper elevation={3} className="user-profile">
+        <Paper elevation={3}>
           <Typography variant="h4" component="h1" gutterBottom>
             User Profile
           </Typography>

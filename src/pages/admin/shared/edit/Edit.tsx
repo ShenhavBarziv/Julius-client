@@ -72,7 +72,7 @@ const Edit = () => {
         <CircularProgress />
       ) : (
         <TableContainer component={Paper}>
-          <Table className="user-table">
+          <Table>
             <TableHead>
               <TableRow>
                 {Constant.TABLE_HEADERS.map(header => (

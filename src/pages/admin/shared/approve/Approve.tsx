@@ -81,14 +81,14 @@ function Approve() {
     <>
       <Navbar admin={isAdmin} />
       {isLoading ? (
-        <p className='isLoading'>{Constants.MESSAGES.LOADING}</p>
+        <p>{Constants.MESSAGES.LOADING}</p>
       ) : status === 'notAdmin' ? (
-        <p className='error-message'>{Constants.MESSAGES.ACCESS_DENIED_ADMIN}</p>
+        <p>{Constants.MESSAGES.ACCESS_DENIED_ADMIN}</p>
       ) : status === 'notLoggedIn' ? (
-        <p className='error-message'>{Constants.MESSAGES.ACCESS_DENIED_LOGIN}</p>
+        <p>{Constants.MESSAGES.ACCESS_DENIED_LOGIN}</p>
       ) : (
         <TableContainer component={Paper}>
-          <Table className='user-table'>
+          <Table>
             <TableHead>
               <TableRow>
                 {Constants.TABLE_HEADERS.map((header) => (

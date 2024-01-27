@@ -19,7 +19,6 @@ import Loading from '../../components/loading/Loading';
 
 export default function SignUp() {
   const [isLoading, SetIsLoading] = useState(false);
-  const [message, SetMessage] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -37,7 +36,6 @@ export default function SignUp() {
       hireDate: String(data.get('hire-date')),
     };
     signupApi.signUpUser(dataObj).then(res => {
-      SetMessage(res.message);
       if (res.success) {
         alert(res.message)
         document.cookie = "email=" + dataObj.email + '; path=/';
