@@ -1,5 +1,5 @@
 import { Container, CircularProgress, Typography } from '@mui/material'
-import * as Constant from "./constant"
+import * as Constant from "./constants"
 function Loading() {
     return (
         <Container style={{ textAlign: 'center', marginTop: '20px' }}>
