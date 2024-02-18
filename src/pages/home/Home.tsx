@@ -6,11 +6,11 @@ import Paper from '@mui/material/Paper';
 import CssBaseline from '@mui/material/CssBaseline';
 import * as Constants from './constants';
 import Copyright from '../../components/copyright/Copyright';
-import BasePage from '../../components/basePage/BasePage';
 
 function Home() {
     return (
-        <BasePage>
+        <Container component="main" maxWidth="md" sx={{ display: 'flex', backgroundColor: '#f0f0f0', flexDirection: 'column', minHeight: '100vh', padding: '2rem', textAlign: 'center' }}>
+            <CssBaseline />
             <Paper elevation={3} sx={{ flexGrow: 1, padding: '2rem', textAlign: 'center' }}>
                 <Typography variant='h2' sx={{ color: '#2c3e50', marginBottom: '1rem', typography: { sm: 'h2', xs: 'h4' } }}>
                     {Constants.WELCOME_HEADER}
@@ -38,7 +38,8 @@ function Home() {
                     {Constants.LOGINMSG} <Link href="/login" sx={{ color: '#3498db' }}>{Constants.LOGIN}</Link>
                 </Typography>
             </Paper>
-        </BasePage>
+            <Copyright sx={{ padding: '10px', textAlign: 'center', backgroundColor: '#f1f1f1' }} />
+        </Container>
     );
 }
 

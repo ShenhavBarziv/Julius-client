@@ -1,29 +1,59 @@
-import React from 'react';
-import { useCookies } from "react-cookie";
-import { useLocation, useNavigate, Link } from 'react-router-dom';
-//import { useAuth } from '../../context/'; // Import the useAuth hook
+import { useNavigate, Link } from 'react-router-dom';
+import { AppBar, Toolbar, Typography, MenuItem } from '@mui/material';
+import { useAuth } from '../../context/AuthContext';
+import * as Constants from './constants';
 
 function Navbar({ admin = false }: { admin?: boolean }) {
   const navigate = useNavigate();
-  //const location = useLocation();
-  //const [cookies, removeCookie] = useCookies(["token"]);
-  //const { user, logout } = useAuth(); // Use the useAuth hook to get user information
+  const { logout } = useAuth();
 
   async function disconnect() {
     alert("Disconnecting...");
-    //logout();
     document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    logout();
     navigate("/login");
   }
 
   return (
-    <nav>
-      <Link to="/profile"> Profile </Link>
-      <Link to="/employee-list"> Employee List </Link>
-
-      admin && <Link to="/admin" > Admin </Link> {/* Display "Admin" link if user is logged in and isAdmin */}
-      <a onClick={disconnect} id='disconnect' > Disconnect </a>
-    </nav>
+    <AppBar position="static" sx={{ backgroundColor: '#333333' }}>
+      <Toolbar>
+        <Typography
+          variant="h6"
+          noWrap
+          component="p"
+          sx={{
+            mr: 2,
+            display: { xs: 'none', md: 'flex' },
+            fontFamily: 'monospace',
+            fontWeight: 700,
+            letterSpacing: '.3rem',
+            color: 'inherit',
+            textDecoration: 'none',
+          }}
+        >{Constants.NAV_WEBSITE_NAME}</Typography>
+        <MenuItem>
+          <Link to="/profile" style={{ textDecoration: 'none', color: 'inherit' }}>
+            <Typography textAlign="center">{Constants.NAV_PROFILE_TEXT}</Typography>
+          </Link>
+        </MenuItem>
+        <MenuItem>
+          <Link to="/employee-list" style={{ textDecoration: 'none', color: 'inherit' }}>
+            <Typography textAlign="center">{Constants.NAV_LIST_TEXT}</Typography>
+          </Link>
+        </MenuItem>
+        {admin && (
+          <MenuItem>
+            <Link to="/admin" style={{ textDecoration: 'none', color: 'inherit' }}>
+              <Typography textAlign="center">{Constants.NAV_ADMIN_TEXT}</Typography>
+            </Link>
+          </MenuItem>
+        )}
+        <MenuItem>
+          <Typography textAlign="center" onClick={disconnect}>{Constants.NAV_DISCONNECT_TEXT}</Typography>
+        </MenuItem>
+      </Toolbar>
+    </AppBar>
   );
 }
+
 export default Navbar;

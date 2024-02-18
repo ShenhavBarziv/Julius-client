@@ -1,7 +1,7 @@
 import { useState, useEffect, FormEvent, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import * as Constant from './constants';
-import loginApi from "../../api/auth/loginAPI";
+import { loginApi } from "../../api/auth/authAPI";
 import Cookies from "universal-cookie";
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -11,11 +11,12 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Loading from "../../components/loading/Loading";
-import BasePage from "../../components/basePage/BasePage";
+import { useAuth } from "../../context/AuthContext";
+import Copyright from "../../components/copyright/Copyright";
 
 function Login() {
     const navigate = useNavigate();
-    //const { login } = useAuth();
+    const { login } = useAuth();
 
     const [email, SetEmail] = useState("");
     const [password, SetPassword] = useState("");
@@ -37,15 +38,16 @@ function Login() {
         SetMessage("");
 
         try {
-            console.log(email, password);
-            const res = await loginApi.loginUser(email, password);
-            console.log(res)
+            const res = (await loginApi.loginUser(email, password));
             if (res.user) {
                 // Call the login function from the context to update the user state
-                //login(res.user);
+                login(res.user);
                 navigate("/profile");
             } else {
-                SetMessage(res.msg);
+                if (res.message) {
+                    SetMessage(res.message);
+                }
+
             }
         } catch (error) {
             console.error(error);
@@ -56,7 +58,7 @@ function Login() {
     }, [email, password])
 
     return (
-        <BasePage>
+        <Container component="main" maxWidth="md" sx={{ display: 'flex', backgroundColor: '#f0f0f0', flexDirection: 'column', minHeight: '100vh', padding: '2rem', textAlign: 'center' }}>
             <Container component="main" maxWidth="lg" sx={{ mt: -5 }}>
                 <CssBaseline />
 
@@ -107,20 +109,20 @@ function Login() {
                                 >
                                     {Constant.BUTTON_TEXT}
                                 </Button>
+                                <LinkMui href="/signup" variant="body2" sx={{}}>{Constant.SIGNUP_SENTENCE}</LinkMui>
                                 {message && (
                                     <Typography variant="body2" color="error" sx={{ mt: 2 }}>
                                         {message}
                                     </Typography>
                                 )}
-                                <br />
-                                <LinkMui href="/signup" variant="body2">{Constant.SIGNUP_SENTENCE}</LinkMui>
-                                <br />
+
                             </Box>
                         </>
                     )}
                 </Box>
             </Container>
-        </BasePage>
+            <Copyright sx={{ padding: '10px', textAlign: 'center', backgroundColor: '#f1f1f1' }} />
+        </Container>
     );
 }
 

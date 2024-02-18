@@ -1,11 +1,9 @@
-export type UserData = {
-    name: string;
-    job: string;
-    email: string;
-    position: string;
-    phoneNumber: string;
-    hireDate: string;
-    birthDate: string;
-    password: string;
-    admin?: boolean;
+export type UserTypeWithoutPasswordAndAdminAndId = {
+    email: string,
+    name: string,
+    job: string,
+    birthDate: string,
+    phoneNumber: string,
+    position: string,
+    hireDate: string,
 };

@@ -9,11 +9,11 @@ import Container from '@mui/material/Container';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers';
-import { UserData } from './types';
+import { UserTypeWithoutPasswordAndAdminAndId } from './types';
 import Loading from '../../components/loading/Loading';
-import BasePage from '../../components/basePage/BasePage';
-import signupApi from '../../api/auth/signupAPI';
+import { signupApi } from '../../api/auth/authAPI';
 import { useNavigate } from 'react-router-dom';
+import Copyright from '../../components/copyright/Copyright';
 export default function SignUp() {
   const [isLoading, SetIsLoading] = useState(false);
   const navigate = useNavigate()
@@ -21,7 +21,7 @@ export default function SignUp() {
     SetIsLoading(true);
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const dataObj: UserData = {
+    const dataObj = {
       email: String(data.get('email')),
       password: String(data.get('password')),
       name: String(data.get('name')),
@@ -30,7 +30,7 @@ export default function SignUp() {
       birthDate: String(data.get('birth-date')),
       position: String(data.get('position')),
       hireDate: String(data.get('hire-date')),
-    };
+    } as UserTypeWithoutPasswordAndAdminAndId;
     signupApi.signUpUser(dataObj).then(res => {
       alert(res.message);
       if (res.success) {
@@ -43,7 +43,7 @@ export default function SignUp() {
   }, []);
 
   return (
-    <BasePage>
+    <Container component="main" maxWidth="md" sx={{ display: 'flex', backgroundColor: '#f0f0f0', flexDirection: 'column', minHeight: '100vh', padding: '2rem', textAlign: 'center' }}>
       <Container component="main" maxWidth="sm" sx={{ mt: -5 }}>
         <Box
           sx={{
@@ -160,6 +160,7 @@ export default function SignUp() {
           )}
         </Box>
       </Container>
-    </BasePage>
+      <Copyright sx={{ padding: '10px', textAlign: 'center', backgroundColor: '#f1f1f1' }} />
+    </Container>
   );
 }
