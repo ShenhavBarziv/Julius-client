@@ -1,5 +1,5 @@
-export type UserTypeWithoutPassword = {
-    _id: string
+export type UserData = {
+    _id: string;
     name: string;
     job: string;
     email: string;

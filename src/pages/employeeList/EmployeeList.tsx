@@ -1,61 +1,67 @@
-import { useEffect, useState } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Container, CssBaseline } from '@mui/material';
-import Navbar from '../../components/navbar/Navbar';
-import employeeListApi from '../../api/user/employeeListApi';
-import type { UserData } from "./types";
-import * as Constant from "./constant"
+import { useEffect, useState } from 'react'
+import BasePage from '../../components/basePage/BasePage';
+import { useAuth } from '../../context/AuthContext';
+import { UserTypeWithoutPassword } from './types';
+import { employeeListApi } from '../../api/user/userAPI';
 import Loading from '../../components/loading/Loading';
-function List() {
-  const [data, setData] = useState<UserData[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [admin, setAdmin] = useState(false);
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import * as Constant from './constants'
+import { useUpdate } from '../../hooks/useUpdate';
 
-  useEffect(() => {
-    employeeListApi.getListData()
-      .then(response => {
-        setData(response.data);
-        setAdmin(response.admin);
-        console.log(response)
-      })
-      .catch(error => {
-        console.error('Error fetching data:', error);
-      }).finally(() => setIsLoading(false));
-  }, []);
+function EmployeeList() {
+    const [data, setData] = useState<UserTypeWithoutPassword[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const { user, login } = useAuth();
+    const update = useUpdate(login);
 
-  return (
-    <Container>
-      <CssBaseline />
-      <Navbar admin={admin} />
-      {isLoading ? (
-        <Loading />
-      ) : (
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                {Constant.HEAD_COLUMNS.map((columnName) => (
-                  <TableCell key={columnName}>{columnName}</TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {data.map((userData) => (
-                <TableRow key={userData._id}>
-                  {Constant.USERDATA_FIELDS.map((key) => (
-                    <TableCell key={key}>
-                      {key === 'admin' ? (userData[key as keyof UserData] ? 'Yes' : 'No') : userData[key as keyof UserData]?.toString()}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))}
+    useEffect(() => {
+        if (user === null) {
+            update();
+        } else {
+            employeeListApi.getListData()
+                .then(response => {
+                    setData(response);
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                }).finally(() => setIsLoading(false));
+        }
+    }, [user, update]);
 
-            </TableBody>
+    if (user === null) {
+        return <Loading />;
+    }
 
-          </Table>
-        </TableContainer>
-      )}
-    </Container>
-  );
+    return (
+        <BasePage admin={user?.admin}>
+            {isLoading ? (
+                <Loading />
+            ) : (
+                <TableContainer component={Paper} sx={{ mt: 4 }}>
+                    <Table>
+                        <TableHead>
+                            <TableRow style={{ backgroundColor: '#d9d9d9' }}> {/* Apply style to the table head */}
+                                {Constant.HEAD_COLUMNS.map((columnName) => (
+                                    <TableCell key={columnName}>{columnName}</TableCell>
+                                ))}
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {data.map((user) => (
+                                <TableRow key={user._id}>
+                                    {Constant.USERDATA_FIELDS.map((key) => (
+                                        <TableCell key={key}>
+                                            {key === 'admin' ? (user[key as keyof UserTypeWithoutPassword] ? 'Yes' : 'No') : user[key as keyof UserTypeWithoutPassword]?.toString()}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            )}
+        </BasePage>
+    )
 }
 
-export default List;
+export default EmployeeList;
