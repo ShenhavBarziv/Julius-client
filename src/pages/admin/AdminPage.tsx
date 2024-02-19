@@ -1,14 +1,13 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Typography, Box, Link as MuiLink, Button, Stack } from '@mui/material'; // Import Stack component
+import { Typography, Box, Link as MuiLink, Button, Stack } from '@mui/material';
 import Loading from '../../components/loading/Loading';
 import BasePage from '../../components/basePage/BasePage';
 import { useAuth } from '../../context/AuthContext';
 import { useUpdate } from '../../hooks/useUpdate';
 import * as Constant from './constants';
-import EditIcon from '@mui/icons-material/Edit';
 import ApproveIcon from '@mui/icons-material/ThumbUp';
-
+import GroupIcon from '@mui/icons-material/Group';
 const Admin = () => {
     const { user, login } = useAuth();
     const update = useUpdate(login);
@@ -33,12 +32,12 @@ const Admin = () => {
                         spacing={3}
                         sx={{ justifyContent: 'center' }}
                     >
-                        <MuiLink component={Link} to="/admin/edit">
+                        <MuiLink component={Link} to="/admin/manage">
                             <Button
                                 variant="contained"
                                 color="primary"
                                 size="medium"
-                                startIcon={<EditIcon />}
+                                startIcon={<GroupIcon />}
                             >
                                 {Constant.EDIT_USER_TEXT}
                             </Button>

@@ -7,10 +7,9 @@ import Profile from '../pages/profile/Profile';
 import EmployeeList from '../pages/employeeList/EmployeeList';
 import AdminPage from '../pages/admin/AdminPage';
 import ApproveUsers from '../pages/admin/shared/approveUsers/ApproveUsers';
+import UsersAdminList from '../pages/admin/shared/manageUsers/UsersAdminList';
+import EditUser from '../pages/admin/shared/manageUsers/shared/EditUser';
 
-function NotFound() {
-    return <Navigate to="/" />;
-}
 function AppRoutes() {
     return (
         <AuthProvider>
@@ -23,11 +22,16 @@ function AppRoutes() {
                     <Route path="/employee-list" element={<EmployeeList />} />
                     <Route path="/admin" element={<AdminPage />} />
                     <Route path="/admin/approve" element={<ApproveUsers />} />
+                    <Route path="/admin/manage" element={<UsersAdminList />} />
+                    <Route path="/admin/editUser" element={<EditUser />} />
                     <Route path="*" element={<NotFound />} />
                 </Routes>
             </BrowserRouter>
         </AuthProvider>
     );
+}
+function NotFound() {
+    return <Navigate to="/" />;
 }
 
 export default AppRoutes;

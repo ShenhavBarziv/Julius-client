@@ -17,6 +17,8 @@ import BasePage from '../../../../components/basePage/BasePage';
 import { useUpdate } from '../../../../hooks/useUpdate';
 import { useAuth } from '../../../../context/AuthContext';
 import Loading from '../../../../components/loading/Loading';
+import GroupIcon from '@mui/icons-material/Group';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 function ApproveUsers() {
     const [data, setData] = useState<UserData[]>([]);
@@ -101,6 +103,7 @@ function ApproveUsers() {
                                         color='primary'
                                         onClick={() => handleApprove(item._id)}
                                         disabled={loadingRows.includes(item._id)}
+                                        startIcon={<GroupIcon />}
                                     >
                                         {Constants.BUTTON_NAMES.APPROVE}
                                         {loadingRows.includes(item._id) && <CircularProgress size={20} />}
@@ -110,6 +113,7 @@ function ApproveUsers() {
                                         color='secondary'
                                         onClick={() => handleDelete(item._id)}
                                         disabled={loadingRows.includes(item._id)}
+                                        startIcon={<DeleteIcon />}
                                     >
                                         {Constants.BUTTON_NAMES.DELETE}
                                         {loadingRows.includes(item._id) && <CircularProgress size={20} />}

@@ -48,7 +48,7 @@ function Navbar({ admin = false }: { admin?: boolean }) {
             </Link>
           </MenuItem>
         )}
-        <MenuItem>
+        <MenuItem sx={{ marginLeft: 'auto' }}>
           <Typography textAlign="center" onClick={disconnect}>{Constants.NAV_DISCONNECT_TEXT}</Typography>
         </MenuItem>
       </Toolbar>
