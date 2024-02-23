@@ -5,20 +5,23 @@ import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers';
-import { UserTypeWithoutPasswordAndAdminAndId } from './types';
+import { UserTypeWithoutAdminAndId } from './types';
 import Loading from '../../components/loading/Loading';
 import { signupApi } from '../../api/auth/authAPI';
 import { useNavigate } from 'react-router-dom';
-import Copyright from '../../components/copyright/Copyright';
+import { ToastContainer, toast, Bounce } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import * as Constant from './constants';
+import BasePage from '../../components/basePage/BasePage';
+import { Container } from '@mui/material';
+
 export default function SignUp() {
-  const [isLoading, SetIsLoading] = useState(false);
-  const navigate = useNavigate()
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+
   const handleSubmit = useCallback((event: React.FormEvent<HTMLFormElement>) => {
-    SetIsLoading(true);
+    setIsLoading(true);
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const dataObj = {
@@ -30,21 +33,58 @@ export default function SignUp() {
       birthDate: String(data.get('birth-date')),
       position: String(data.get('position')),
       hireDate: String(data.get('hire-date')),
-    } as UserTypeWithoutPasswordAndAdminAndId;
+    } as UserTypeWithoutAdminAndId;
+
     signupApi.signUpUser(dataObj).then(res => {
-      alert(res.message);
       if (res.success) {
         document.cookie = "email=" + dataObj.email + '; path=/';
-        navigate('/login');
+        toast.success(res.message || Constant.SUCCESS_SIGN_UP_MESSAGE, {
+          position: "bottom-center",
+          autoClose: 1300,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          onClose: () => {
+            navigate(Constant.LOGIN_PATH);
+          }
+        });
+      } else {
+        toast.error(res.message || Constant.ERROR_SIGN_UP_MESSAGE, {
+          position: "bottom-center",
+          autoClose: 1300,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          transition: Bounce,
+          onClose: () => { setIsLoading(false); }
+        });
       }
-    }).catch(() => { alert("Error"); }).finally(() => {
-      SetIsLoading(false);
-    });
+    }).catch(() => {
+      toast.error(Constant.ERROR_SIGN_UP_MESSAGE, {
+        position: "bottom-center",
+        autoClose: 1300,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        transition: Bounce,
+        onClose: () => { setIsLoading(false); }
+      });
+    })
   }, []);
 
   return (
-    <Container component="main" maxWidth="md" sx={{ display: 'flex', backgroundColor: '#f0f0f0', flexDirection: 'column', minHeight: '100vh', padding: '2rem', textAlign: 'center' }}>
+    <BasePage noNav>
       <Container component="main" maxWidth="sm" sx={{ mt: -5 }}>
+        <ToastContainer />
         <Box
           sx={{
             marginTop: 8,
@@ -58,11 +98,11 @@ export default function SignUp() {
           ) : (
             <>
               <Typography component="h1" variant="h4">
-                Sign up
+                {Constant.SIGN_UP_HEADER}
               </Typography>
-              <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3, backgroundColor: 'white', p: 3, borderRadius: 4, boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)' }}>
+              <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3, backgroundColor: 'white', p: 3, borderRadius: 4, boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)' }}>
                 <Typography component="h1" variant="h5" sx={{ mb: 2 }}>
-                  Login info
+                  {Constant.LOGIN_HEADER}
                 </Typography>
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={6}>
@@ -71,7 +111,7 @@ export default function SignUp() {
                       fullWidth
                       type="email"
                       id="email"
-                      label="Email Address"
+                      label={Constant.EMAIL_LABEL}
                       name="email"
                       autoComplete="email"
                       sx={{ width: '100%' }}
@@ -82,7 +122,7 @@ export default function SignUp() {
                       required
                       fullWidth
                       name="password"
-                      label="Password"
+                      label={Constant.PASSWORD_LABEL}
                       type="password"
                       id="password"
                       autoComplete="password"
@@ -93,7 +133,7 @@ export default function SignUp() {
                       required
                       fullWidth
                       id="name"
-                      label="Name"
+                      label={Constant.NAME_LABEL}
                       name="name"
                       autoComplete="name"
                     />
@@ -103,7 +143,7 @@ export default function SignUp() {
                       required
                       fullWidth
                       id="phone-number"
-                      label="Phone number"
+                      label={Constant.PHONE_NUMBER_LABEL}
                       name="phone-number"
                       autoComplete="phone"
                     />
@@ -113,7 +153,7 @@ export default function SignUp() {
                       required
                       fullWidth
                       id="job"
-                      label="Job"
+                      label={Constant.JOB_LABEL}
                       name="job"
                     />
                   </Grid>
@@ -122,26 +162,24 @@ export default function SignUp() {
                       required
                       fullWidth
                       id="position"
-                      label="Position"
+                      label={Constant.POSITION_LABEL}
                       name="position"
                     />
                   </Grid>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <Grid item xs={6} sm={6}>
-                      <DatePicker
-                        disableFuture
-                        label="Birth Date"
-                        name="birth-date"
-                      />
-                    </Grid>
-                    <Grid item xs={6} sm={6}>
-                      <DatePicker
-                        disableFuture
-                        label="Hire Date"
-                        name="hire-date"
-                      />
-                    </Grid>
-                  </LocalizationProvider>
+                  <Grid item xs={6} sm={6}>
+                    <DatePicker
+                      disableFuture
+                      label={Constant.BIRTH_DATE_LABEL}
+                      name="birth-date"
+                    />
+                  </Grid>
+                  <Grid item xs={6} sm={6}>
+                    <DatePicker
+                      disableFuture
+                      label={Constant.HIRE_DATE_LABEL}
+                      name="hire-date"
+                    />
+                  </Grid>
                 </Grid>
                 <Button
                   type="submit"
@@ -150,17 +188,16 @@ export default function SignUp() {
                   sx={{ mt: 3, mb: 2, backgroundColor: '#3498db', color: 'white' }}
                   disabled={isLoading}
                 >
-                  Sign Up
+                  {Constant.SIGN_UP_BUTTON_TEXT}
                 </Button>
-                <Link href="/login" variant="body2">
-                  Have an account? Log in
+                <Link href={Constant.LOGIN_PATH} variant="body2">
+                  {Constant.HAVE_ACCOUNT_LINK_TEXT}
                 </Link>
               </Box>
             </>
           )}
         </Box>
       </Container>
-      <Copyright sx={{ padding: '10px', textAlign: 'center', backgroundColor: '#f1f1f1' }} />
-    </Container>
+    </BasePage>
   );
 }

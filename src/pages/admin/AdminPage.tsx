@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Typography, Box, Link as MuiLink, Button, Stack } from '@mui/material';
 import Loading from '../../components/loading/Loading';
 import BasePage from '../../components/basePage/BasePage';
@@ -11,6 +11,8 @@ import GroupIcon from '@mui/icons-material/Group';
 const Admin = () => {
     const { user, login } = useAuth();
     const update = useUpdate(login);
+    const navigate = useNavigate();
+
     useEffect(() => {
         if (user === null) {
             update()
@@ -18,6 +20,9 @@ const Admin = () => {
     }, [user]);
     if (user === null) {
         return <Loading />;
+    }
+    else if (user.admin === false) {
+        navigate('/profile');
     }
 
     return (

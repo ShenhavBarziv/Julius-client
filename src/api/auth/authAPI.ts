@@ -15,6 +15,12 @@ export const loginApi = {
         );
         return response.data;
     },
+    logout: async () => {
+        await instance.get(
+            "/api/auth/logout",
+            { withCredentials: true }
+        );
+    }
 };
 export const signupApi = {
     signUpUser: async (userData: UserTypeWithoutPasswordAndAdminAndId) => {
@@ -22,7 +28,7 @@ export const signupApi = {
             const response = await instance.post('/api/user/register', userData, { withCredentials: true });
             console.log(response.data)
             if (response.data.code === 201) {
-                return { success: true, message: "New user created successfully" };
+                return { success: true, message: "A new user created successfully" };
             } else if (response.data.code === 409) {
                 return { success: false, message: "User already exists" };
             } else if (response.data.code === 400) {

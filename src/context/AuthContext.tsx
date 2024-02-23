@@ -1,4 +1,5 @@
 import { createContext, useContext, useState } from 'react';
+import { loginApi } from '../api/auth/authAPI'
 import { UserData } from './types';
 
 interface AuthContextType {
@@ -17,6 +18,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const logout = () => {
+    loginApi.logout()
     setUser(null);
   };
 

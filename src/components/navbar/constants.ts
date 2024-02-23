@@ -3,4 +3,6 @@ export const NAV_PROFILE_TEXT = "Profile";
 export const NAV_LIST_TEXT = "Employee List";
 export const NAV_ADMIN_TEXT = "Admin";
 export const NAV_DISCONNECT_TEXT = "Disconnect";
+export const LOGIN_PATH = "/login";
+
 

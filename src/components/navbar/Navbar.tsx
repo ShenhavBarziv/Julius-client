@@ -2,14 +2,11 @@ import { useNavigate, Link } from 'react-router-dom';
 import { AppBar, Toolbar, Typography, MenuItem } from '@mui/material';
 import { useAuth } from '../../context/AuthContext';
 import * as Constants from './constants';
-
 function Navbar({ admin = false }: { admin?: boolean }) {
   const navigate = useNavigate();
   const { logout } = useAuth();
 
   async function disconnect() {
-    alert("Disconnecting...");
-    document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     logout();
     navigate("/login");
   }

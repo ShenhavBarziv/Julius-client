@@ -4,11 +4,11 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import {
     Container,
     Typography,
-    TextField,
     Checkbox,
     Button,
     FormControlLabel,
     Box,
+    TextField,
 } from '@mui/material';
 import Loading from '../../../../../components/loading/Loading';
 import { UserTypeWithoutPassword } from '../types';
@@ -16,6 +16,10 @@ import BasePage from '../../../../../components/basePage/BasePage';
 import { useAuth } from '../../../../../context/AuthContext';
 import { useUpdate } from '../../../../../hooks/useUpdate';
 import * as Constant from './constants';
+import { DatePicker } from '@mui/x-date-pickers';
+import dayjs from 'dayjs';
+import { ToastContainer, toast, Bounce } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function EditUser() {
     const { user, login } = useAuth();
@@ -35,13 +39,15 @@ function EditUser() {
                 console.error('Error fetching data:', error);
             }).finally(() => setIsLoading(false));
     }
+
     useEffect(() => {
         if (user === null) {
             update();
         } else {
-            fetchUser()
+            fetchUser();
         }
     }, [user]);
+
     if (isLoading || user === null) {
         return <Loading />;
     }
@@ -53,28 +59,53 @@ function EditUser() {
         }));
     };
 
-
     const handleSave = async () => {
         try {
             if (userData !== null) {
                 const response = await manageUsers.updateUser(userData);
                 if (response.status !== 200) {
-                    alert(response.data);
+                    toast.error(response.data, {
+                        position: "bottom-center",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "dark",
+                        transition: Bounce,
+                        onClose: () => {
+                            navigate('/admin/manage');
+                        }
+                    });
                 }
             } else {
-                throw new Error("userData is null")
+                throw new Error("userData is null");
             }
-
         } catch (error) {
             console.error('Error updating user data:', error);
-            alert('Error');
+            toast.error("Error updating user", {
+                position: "bottom-center",
+                autoClose: 1300,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                transition: Bounce,
+                onClose: () => {
+                    navigate('/admin/manage');
+                }
+            });
         } finally {
-            navigate('/admin/');
+            navigate('/admin/manage');
         }
     };
 
     return (
-        <BasePage>
+        <BasePage admin={user?.admin}>
+            <ToastContainer />
             <Typography variant="h4" gutterBottom>
                 {Constant.HEADER_TEXT}
             </Typography>
@@ -96,11 +127,11 @@ function EditUser() {
                                         label="Admin"
                                     />
                                 ) : key === 'birthDate' || key === 'hireDate' ? (
-                                    <TextField
-                                        type="date"
-                                        value={value as string}
-                                        onChange={(e) => handleInputChange(key, e.target.value)}
-                                        InputLabelProps={{ shrink: true }}
+                                    <DatePicker
+                                        disableFuture
+                                        label={key === 'birthDate' ? Constant.BIRTH_DATE_LABEL : Constant.HIRE_DATE_LABEL}
+                                        name={key}
+                                        defaultValue={dayjs(new Date(value as string))}
                                     />
                                 ) : (
                                     <TextField
